@@ -60,6 +60,9 @@ The [Responsible Disclosure Program](https://auth0.com/whitehat) details the pro
 
 This project is licensed under the MIT license. See the [LICENSE](../LICENSE) file for more info.
 
+# DevOps steps
+
+Always run `pylint $(git ls-files '*.py')` on the code, because that is what GitHub `Pylint` action does.
 
 # Notes
 

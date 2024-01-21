@@ -65,26 +65,20 @@ db_host = env.get('DB_HOST')
 db_password = env.get('DB_PASSWORD')
 # Source IP needs to be enabled on the MongoDB Atlas connection
 uri = f"mongodb+srv://gkorodi:{db_password}@{db_host}/?retryWrites=true&w=majority"
-
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
+db = client['links']
+
 link_rows = []
-try:
-    db = client['links']
 
-    # Get 100 random documents from the collection
-    randos = db['links'].aggregate([{'$sample': {'size': 100}}])
-    #
-    # Get one random document matching { yyy: 10} from the `xxx` collection.
-    # db.xxx.aggregate([{ $match: {yyy: 10}}, { $sample: {size: 1}} ])
-
-    for lr in randos:
-        lr['host'] = lr['canonicalUrl'].split('/')[2]
-        link_rows.append(lr)
-
-except Exception as e:
-    print(e)
-
+# Get 100 random documents from the collection
+randos = db['links'].aggregate([{'$sample': {'size': 100}}])
+#
+# Get one random document matching { yyy: 10} from the `xxx` collection.
+# db.xxx.aggregate([{ $match: {yyy: 10}}, { $sample: {size: 1}} ])
+for lr in randos:
+    lr['host'] = lr['canonicalUrl'].split('/')[2]
+    link_rows.append(lr)
 
 def get_settings():
     """Create dictionary with settings data and return it."""
