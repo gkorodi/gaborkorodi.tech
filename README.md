@@ -59,3 +59,12 @@ The [Responsible Disclosure Program](https://auth0.com/whitehat) details the pro
 ## License
 
 This project is licensed under the MIT license. See the [LICENSE](../LICENSE) file for more info.
+
+
+# Notes
+
+https://medium.com/codex/10-python-one-liners-for-lambda-functions-4643bc5a9ea2
+
+https://www.atatus.com/blog/python-converting-lsts-to-dictionaries/
+
+https://medium.com/@BetterEverything/python-one-liner-to-transform-and-filter-lists-382b9c0b85d2

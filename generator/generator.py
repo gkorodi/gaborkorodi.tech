@@ -1,19 +1,15 @@
-from jinja2 import Environment, FileSystemLoader
+"""Static file generator"""
+import jinja2
 
 # load templates folder to environment (security measure)
-env = Environment(loader=FileSystemLoader('./'))
+env = jinja2.Environment(loader=jinja2.FileSystemLoader('./'))
 
-# load the `index.jinja` template
-#index_template = env.get_template('index.jinja')
-#output_from_parsed_template = index_template.render()
 
-# write the parsed template
-#with open("../public/index.html", "w") as chap_page:
-#    chap_page.write(output_from_parsed_template)
+def make_page(page_name):
+    """Create a main/top-level page."""
+    with open(f"../public/{page_name}.html", "w", encoding="utf-8") as chap_page:
+        chap_page.write(env.get_template(f"{page_name}.jinja").render())
 
-def makePage(pn):
-    with open(f"../public/{pn}.html", "w") as chap_page:
-        chap_page.write(env.get_template(f"{pn}.jinja").render())
 
-for page_name in ['index','blog','404']:
-    makePage(page_name)
+for template_name in ['index', 'blog', '404']:
+    make_page(template_name)

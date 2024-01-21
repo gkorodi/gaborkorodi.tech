@@ -1,4 +1,4 @@
-flask
+flask~=3.0.1
 fastapi
 fastapi-sessions
 pydantic
@@ -6,4 +6,5 @@ python-dotenv>=0.19.2
 authlib>=1.0
 requests>=2.27.1
 gunicorn
-pymongo
+pymongo~=4.6.1
+Jinja2~=3.1.3
