@@ -1,0 +1,35 @@
+
+### About robots.txt
+
+https://searchengineland.com/a-deeper-look-at-robotstxt-17573
+
+
+## FLASK
+
+```sh
+#!/bin/bash
+
+cd /var/www/gk-tech
+
+rm -f venv && python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip && pip install -r requirements.txt
+
+FLASK_DEBUG=on FLASK_APP=server.py flask run 
+```
+
+## FastApi or flask
+
+```sh
+cd /var/www/gk-tech
+
+rm -f venv && python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip && pip install -r requirements.txt
+
+gunicorn app:app --bind 127.0.0.1:5000 --reload
+
+```
+
+## Service
+

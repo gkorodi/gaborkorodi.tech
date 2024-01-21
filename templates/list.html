@@ -1,0 +1,57 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card  card-plain">
+                <div class="card-header">
+                    <h4 class="card-title">Latest Links</h4>
+                    <p class="category">Links from the past 10 days without level</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table tablesorter table-hover" id="">
+                            <thead class=" text-primary">
+                            <tr>
+                                <th>
+
+                                </th>
+
+                                <th>
+                                    Link
+                                </th>
+
+                                <th class="text-center d-none d-sm-block">
+                                    UpdatedAt
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for link in links %}
+                            <tr onClick="window.location='/links/{{ link['_id'] }}';">
+                                <td class="d-none d-sm-block"><label>
+                                    <input type="checkbox" name="isDelete" />
+                                </label></td>
+
+                                <td>
+                                    {{ link.title if link.title is not none else 'No Title' }}<br/>
+                                    <small>- {{ link.host }}</small>
+                                </td>
+
+                                <td class="text-center d-none d-sm-block">
+                                    {{ link.updated_at|time_ago }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
