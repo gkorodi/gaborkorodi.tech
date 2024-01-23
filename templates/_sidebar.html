@@ -17,18 +17,12 @@
             "list":"align-left-2"} %}
 
             {% for menu in icons.keys() %}
-            <li class="{% if request.url_rule.endpoint == menu %}active{% endif %}">
-                <a href="{{ url_for('list_of_docs' if menu == 'list' else menu) }}">
-                    <i class="tim-icons icon-{{ icons[menu] }}"></i>
-                    <p>{{ menu|capitalize }}</p>
-                </a>
-		    {% else %}
-<a href="{{ url_for(menu) }}">
-                    <i class="tim-icons icon-{{ icons[menu] }}"></i>
-                    <p>{{ menu|capitalize }}</p>
-                </a>
-		    {% endif %}
-            </li>
+                <li class="{% if request.url_rule.endpoint == menu %}active{% endif %}">
+                    <a href="{{ url_for('list_of_docs' if menu == 'list' else menu) }}">
+                        <i class="tim-icons icon-{{ icons[menu] }}"></i>
+                        <p>{{ menu|capitalize }}</p>
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </div>
