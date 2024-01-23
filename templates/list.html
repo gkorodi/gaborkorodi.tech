@@ -14,30 +14,24 @@
                         <table class="table tablesorter table-hover" id="">
                             <thead class=" text-primary">
                             <tr>
-                                <th>
-
-                                </th>
-
-                                <th>
-                                    Link
-                                </th>
-
-                                <th class="text-center d-none d-sm-block">
-                                    UpdatedAt
-                                </th>
-
+                                <th></th>
+                                <th>Link</th>
+                                <th class="text-center d-none d-sm-block">UpdatedAt</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for link in links %}
-                            <tr onClick="window.location='/links/{{ link['_id'] }}';">
+                            <tr">
                                 <td class="d-none d-sm-block"><label>
                                     <input type="checkbox" name="isDelete" />
                                 </label></td>
 
                                 <td>
-                                    {{ link.title if link.title is not none else 'No Title' }}<br/>
-                                    <small>- {{ link.host }}</small>
+                                    <span onclick="window.location='/links/{{ link['_id'] }}';">
+                                        {{ link.title if link.title is not none else 'No Title' }}
+                                    </span><br/>
+                                    <small>- {{ link.host }}</small><br />
+                                    {% for lvl in range(1,10) %}<span class="badge badge-pill badge-info">{{ lvl }}</span> {% endfor %}
                                 </td>
 
                                 <td class="text-center d-none d-sm-block">

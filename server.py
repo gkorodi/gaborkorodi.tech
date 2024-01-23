@@ -1,17 +1,16 @@
 """Python Flask WebApp Auth0 integration example
 """
 
-import json
 import datetime
-from os import environ as env
-from urllib.parse import quote_plus, urlencode
-
+import json
 from authlib.integrations.flask_client import OAuth
 from bson import ObjectId
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, url_for
+from os import environ as env
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from urllib.parse import quote_plus, urlencode
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -25,14 +24,10 @@ def time_ago(epoch_value):
     """Jinja filter to display intelligent/user-friendly time"""
     if not epoch_value:
         return 'n/a'
-    print(int(epoch_value.strftime('%s')) + 2)
-    # print(datetime.strptime(epoch_value,'%s'))
 
     from_date = datetime.datetime.now()
-    to_date = epoch_value  # int(epoch_value.strftime('%s')) #datetime.fromtimestamp(1000 / 1000)
-    print(f"{from_date} {epoch_value}")
+    to_date = epoch_value
     dtdiff = abs(from_date - to_date)
-    print(dtdiff)
 
     days = dtdiff.days
     # seconds = dtdiff.seconds
@@ -48,6 +43,7 @@ def time_ago(epoch_value):
         return f"{hours} hours"
     return f"{days} days"
 
+
 app.jinja_env.filters['time_ago'] = time_ago
 
 oauth = OAuth(app)
@@ -61,10 +57,11 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
+db_user = env.get("DB_USER")
 db_host = env.get('DB_HOST')
 db_password = env.get('DB_PASSWORD')
 # Source IP needs to be enabled on the MongoDB Atlas connection
-uri = f"mongodb+srv://gkorodi:{db_password}@{db_host}/?retryWrites=true&w=majority"
+uri = f"mongodb+srv://{db_user}:{db_password}@{db_host}/?retryWrites=true&w=majority"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 db = client['links']
@@ -79,6 +76,7 @@ randos = db['links'].aggregate([{'$sample': {'size': 100}}])
 for lr in randos:
     lr['host'] = lr['canonicalUrl'].split('/')[2]
     link_rows.append(lr)
+
 
 def get_settings():
     """Create dictionary with settings data and return it."""
@@ -139,7 +137,6 @@ def settings():
     return render_template(
         "settings.html",
         session=session.get("user"),
-        pretty=json.dumps(session.get("user"), indent=4),
         settings=get_settings()
     )
 
@@ -148,8 +145,12 @@ def settings():
 def links_by_id(doc_id: str):
     """Show individual document by its _id field."""
     dbcollection = client['links']['links']
+    print(f"Searching for {doc_id}")
+    list_of_docs = dbcollection.find_one({'_id': ObjectId(doc_id)})
+    print(list_of_docs)
+
     return render_template('details.html', session=session.get("user"),
-                           doc=dbcollection.find_one({'_id': ObjectId(doc_id)}))
+                           doc=list_of_docs)
 
 
 def audit_log(msg) -> bool:
@@ -194,7 +195,7 @@ def profile():
 
 @app.route("/list")
 def list_of_docs():
-    """Show a 100 random documents"""
+    """Show 100 random documents"""
     print(f"showing a 100 row out of {len(link_rows)}")
     return render_template(
         "list.html",

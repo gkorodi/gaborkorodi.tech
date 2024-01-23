@@ -44,7 +44,7 @@ enterprise identity systems like **Windows Azure AD, Google Apps, Active Directo
 ## Create a free account in Auth0
 
 1. Go to [Auth0](https://auth0.com) and click Sign Up.
-2. Use Google, GitHub or Microsoft Account to login.
+2. Use Google, GitHub or Microsoft Account to log in.
 
 ## Issue Reporting
 
@@ -58,7 +58,7 @@ The [Responsible Disclosure Program](https://auth0.com/whitehat) details the pro
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](../LICENSE) file for more info.
+This project is licensed under the MIT license. 
 
 # DevOps steps
 
@@ -71,3 +71,21 @@ https://medium.com/codex/10-python-one-liners-for-lambda-functions-4643bc5a9ea2
 https://www.atatus.com/blog/python-converting-lsts-to-dictionaries/
 
 https://medium.com/@BetterEverything/python-one-liner-to-transform-and-filter-lists-382b9c0b85d2
+
+## Environment
+
+### Setup
+
+The `.env` file stores all secret and settings information, which is not included in the repo. Needs to be created
+per server and per environment.
+
+An example `.env` file can be created from the below template
+
+AUTH0_CLIENT_ID=<CLIENT_ID_FOR_AUTH0_APPLICATION>
+AUTH0_CLIENT_SECRET=<CLIENT_SECRET_FOR_AUTH0_APPLICATION>
+AUTH0_DOMAIN="<DOMAIN_FOR_AUTH0_APPLICATION>"
+APP_SECRET_KEY="<FLASK_APPLICATION_SECRET_CODE>"
+DB_HOST="<DB_HOST_DNS_NAME>"
+DB_PASSWORD="<DB_PASSWORD>"
+DB_USER="<DB_USERNAME>"
+
