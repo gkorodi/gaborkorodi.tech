@@ -1,76 +1,101 @@
 {% extends '_base.html' %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="title">
-                    <a href="{{ doc.canonicalUrl }}" target="_blank">{{ doc.title if doc.title is not none else 'No Title' }}</a>
-                </h2>
 
-                {% if 'abstract' in doc.keys() %}
-                <h3>Abstract</h3>
-                <p>{{ doc.abstract.text }}</p>
-                <br/>
-                {% endif %}
+    <div class="row">
+        {% if doc %}
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="title">
+                            <a href="{{ doc.canonicalUrl }}"
+                               target="_blank">{{ doc.title if doc.title is not none else 'No Title' }}</a>
+                        </h2>
 
-                {% if 'summary' in doc.keys() %}
-                <h3>Summary</h3>
-                <p>{{ doc.summary.content|safe }}</p>
-                {% endif %}
-                <hr/>
-                {% if errors %}
-                {% for msg in errors %}
-                    <div style="color: red">{{ xk }}</div>
-                {% endfor %}
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <form>
-                    {% set host = doc.canonicalUrl.split('/')[2] %}
+                        {% if 'abstract' in doc.keys() %}
+                            <h3>Abstract</h3>
+                            <p>{{ doc.abstract.text }}</p>
+                            <br/>
+                        {% endif %}
 
-                    <div class="row">
-                         <div class="col-md-6 pr-md-1">
-                             <div class="form-group">
-                                 <label>Author</label>
-                                 <input type="text" class="form-control" placeholder="Publication author" value="{{ doc.author}}">
-                             </div>
-                         </div>
-                         <div class="col-md-6 pl-md-1">
-                             <div class="form-group">
-                                 <label>Host</label>
-                                 <input type="text" class="form-control" placeholder="Publication name" value="{{ host }}">
-                             </div>
-                         </div>
-                     </div>
+                        {% if 'snippet' in doc.keys() %}
+                            <h3>Snippet</h3>
+                            <p>{{ doc['snippet']|safe }}</p>
+                            <br/>
+                        {% endif %}
 
-                    <!-- Show field names that are not handled anywhere else on the page. -->
-                    {% for xk in doc.keys() %}
-                    {% if xk not in ['keywords', 'author', 'alternate','summary', 'enclosure',
+                        {% if 'summary' in doc.keys() %}
+                            <h3>Summary</h3>
+                            <p>{{ doc.summary.content|safe }}</p>
+                        {% endif %}
+                        <hr/>
+                        {% if errors %}
+                            {% for msg in errors %}
+                                <div style="color: red">{{ xk }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            {% set host = doc.canonicalUrl.split('/')[2] %}
+
+                            <div class="row">
+                                <div class="col-md-6 pr-md-1">
+                                    <div class="form-group">
+                                        <label>Author</label>
+                                        <input type="text" class="form-control" placeholder="Publication author"
+                                               value="{{ doc.author }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-md-1">
+                                    <div class="form-group">
+                                        <label>Host</label>
+                                        <input type="text" class="form-control" placeholder="Publication name"
+                                               value="{{ host }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Show field names that are not handled anywhere else on the page. -->
+                            {% for xk in doc.keys() %}
+                                {% if xk not in ['keywords', 'author', 'alternate','summary', 'enclosure',
                     'categories','tags','commonTopics','entities',
                     'indicatorsOfCompromise','crawled','published','updated','title','originId',
                     'recrawled','title','id','origin','canonicalUrl','abstract', 'readTime', 'leoSummary',
-                    'visual','content','fullContent',
+                    'visual','content','fullContent','businessEvents','snippet',
                     '_id','language','fingerprint','clusters','unread','expansionFailureStatus','updated_at','engagement','engagementRate','actionTimestamp',
                     'updateCount',
                     ] %}
-                    <div style="color: red">{{ xk }}</div>
-                    {% endif %}
-                    {% endfor %}
+                                    <div style="color: red">{{ xk }}</div>
+                                {% endif %}
+                            {% endfor %}
 
-                    <!-- *** Display these fields as form input fields (textarea) -->
-                    {% for k in [ 'keywords', 'alternate', 'enclosure','originId',
-                    'categories','tags','commonTopics','entities', 'indicatorsOfCompromise'] %}
-                    {% if k in doc.keys() %}
-                    <div>
-                        <span><strong>{{ k }}</strong></span><br/>
-                        <textarea class="form-control" name="{{ k }}">{{ doc[k] }}</textarea>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
+                            <!-- *** Display these fields as form input fields (textarea) -->
+                            {% for k in [ 'keywords', 'alternate', 'enclosure','originId',
+                    'categories','commonTopics', 'indicatorsOfCompromise'] %}
+                                {% if k in doc.keys() %}
+                                    <div>
+                                        <span><strong>{{ k }}</strong></span><br/>
 
-                    <!-- <div class="row">
+                                        {% if k == 'categories' or k == 'commonTopics' %}
+                                            {% for c in doc[k] %}
+                                                <span class="badge badge-pill badge-info">{{ c['label'] }}</span>
+                                            {% endfor %}
+                                            <span class="badge badge-pill badge-success">+</span>
+                                        {% elif k == 'keywords' %}
+                                            {% for c in doc['keywords'] %}
+                                                <span class="badge badge-pill badge-info">{{ c }}</span>
+                                            {% endfor %}
+                                            <span class="badge badge-pill badge-success">+</span>
+                                        {% else %}
+                                            <textarea class="form-control" name="{{ k }}">{{ doc[k] }}</textarea>
+
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            <!-- <div class="row">
                         <div class="col-md-5 pr-md-1">
                             <div class="form-group">
                                 <label>Title</label>
@@ -92,70 +117,70 @@
                             </div>
                         </div>
                     </div> -->
-                    <!-- <div class="row">
-                         <div class="col-md-6 pr-md-1">
-                             <div class="form-group">
-                                 <label>First Name</label>
-                                 <input type="text" class="form-control" placeholder="First Name" value="Some text">
-                             </div>
-                         </div>
-                         <div class="col-md-6 pl-md-1">
-                             <div class="form-group">
-                                 <label>Last Name</label>
-                                 <input type="text" class="form-control" placeholder="Last Name" value="Some other text">
-                             </div>
-                         </div>
-                     </div> -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Titlte</label>
-                                <input type="text" class="form-control" placeholder="Article Title"
-                                       value="{{ doc.title }}">
+                            <!-- <div class="row">
+                                 <div class="col-md-6 pr-md-1">
+                                     <div class="form-group">
+                                         <label>First Name</label>
+                                         <input type="text" class="form-control" placeholder="First Name" value="Some text">
+                                     </div>
+                                 </div>
+                                 <div class="col-md-6 pl-md-1">
+                                     <div class="form-group">
+                                         <label>Last Name</label>
+                                         <input type="text" class="form-control" placeholder="Last Name" value="Some other text">
+                                     </div>
+                                 </div>
+                             </div> -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Titlte</label>
+                                        <input type="text" class="form-control" placeholder="Article Title"
+                                               value="{{ doc.title }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="canonicalUrl">canonicalUrl</label>
-                                <input type="text" class="form-control" id="canonicalUrl" name="canonicalUrl"
-                                       placeholder="{{ doc.canonicalUrl }}">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="canonicalUrl">canonicalUrl</label>
+                                        <input type="text" class="form-control" id="canonicalUrl" name="canonicalUrl"
+                                               placeholder="{{ doc.canonicalUrl }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>origin.htmlUrl</label>
-                                <input type="text" class="form-control" placeholder="Home Address"
-                                       value="{{ doc.origin.htmlUrl }}">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>origin.htmlUrl</label>
+                                        <input type="text" class="form-control" placeholder="Home Address"
+                                               value="{{ doc.origin.htmlUrl }}">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="row">
-                        <div class="col-md-4 pr-md-1">
-                            <div class="form-group">
-                                <label>City</label>
-                                <input type="text" class="form-control" placeholder="City" value="Mike">
-                            </div>
-                        </div>
-                        <div class="col-md-4 px-md-1">
-                            <div class="form-group">
-                                <label>Country</label>
-                                <input type="text" class="form-control" placeholder="Country" value="Andrew">
-                            </div>
-                        </div>
-                        <div class="col-md-4 pl-md-1">
-                            <div class="form-group">
-                                <label>Postal Code</label>
-                                <input type="number" class="form-control" placeholder="ZIP Code">
-                            </div>
-                        </div>
-                    </div> -->
+                            <!--
+                            <div class="row">
+                                <div class="col-md-4 pr-md-1">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" class="form-control" placeholder="City" value="Mike">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 px-md-1">
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <input type="text" class="form-control" placeholder="Country" value="Andrew">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pl-md-1">
+                                    <div class="form-group">
+                                        <label>Postal Code</label>
+                                        <input type="number" class="form-control" placeholder="ZIP Code">
+                                    </div>
+                                </div>
+                            </div> -->
 
-                    <!--
+                            <!--
                     {% if 'summary' in doc.keys() %}
                     <div class="row">
                         <div class="col-md-8">
@@ -166,53 +191,72 @@
                         </div>
                     </div>
                     {% endif %} -->
-                </form>
-            </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-fill btn-primary">Save</button>
-                <button onClick="window.location='/links/delete/{{doc['_id']}}';" class="btn btn-fill btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card card-user">
-            <div class="card-body">
-                <p class="card-text">
-                <div class="author">
-                    <div class="block block-one">1aaa</div>
-                    <div class="block block-two">2aaa</div>
-                    <div class="block block-three">3aaa</div>
-                    <div class="block block-four">4aaa</div>
-                    <a href="javascript:void(0)">
-                        {% if 'visual' in doc.keys() %}
-                        <img class="avatar" src="{{ doc.visual.url }}" alt="visual.url">
-                        {% endif %}
-                        <h5 class="title">Level: {{ doc.level }}</h5>
-                    </a>
-                    <div>
-                        <table class="table table-bordered">
-                            {% for k in ['crawled','recrawled', 'published', 'actionTimestamp', 'updated' ] %}
-                            <tr>
-                                <th>{{ k }}</th>
-                                <td>{{ doc[k] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-fill btn-primary">Save</button>
+                        <button onClick="window.location='/links/delete/{{ doc['_id'] }}';"
+                                class="btn btn-fill btn-danger">
+                            Delete
+                        </button>
                     </div>
                 </div>
-                </p>
-                <div class="card-description">
-                    {% if 'leoSummary' in doc.keys() %}
-                    <blockquote>{% for s in doc.leoSummary.sentences %}
-                        <p>{{ s.text }}</p>
-                        {% endfor %} - LeoSummary
-                    </blockquote>
-                    {% endif %}
+            </div>
+            <div class="col-md-3">
+                <div class="card card-user">
+                    <div class="card-body">
+                        <p class="card-text">
+                        <div class="author">
+                            <div class="block block-one">1aaa</div>
+                            <div class="block block-two">2aaa</div>
+                            <div class="block block-three">3aaa</div>
+                            <div class="block block-four">4aaa</div>
+                            <a href="javascript:void(0)">
+                                {% if 'visual' in doc.keys() %}
+                                    <img class="avatar" src="{{ doc.visual.url }}" alt="visual.url">
+                                {% endif %}
+                                <h5 class="title">Level: {% for lvl in range(1,10) %}
+                                    <button class="btn btn-sm {% if doc.level == lvl|string %}btn-info{% endif %}"
+                                            id="btn-level-{{ doc['_id'] }}-{{ lvl }}"
+                                            onclick="setLevel('{{ doc['_id'] }}', {{ lvl }});">{{ lvl }}</button>
+                                {% endfor %}</h5>
+                            </a>
+                            <div>
+
+                            </div>
+                        </div>
+                        </p>
+                        <div class="card-description">
+
+                            <table class="table table-bordered">
+                                {% for k in ['crawled','recrawled', 'published', 'actionTimestamp', 'updated' ] %}
+                                    <tr>
+                                        <th>{{ k }}</th>
+                                        <td>{{ doc[k] }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+                            {% if 'leoSummary' in doc.keys() %}
+                                <blockquote>{% for s in doc.leoSummary.sentences %}
+                                    <p>{{ s.text }}</p>
+                                {% endfor %} - LeoSummary
+                                </blockquote>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                    </div>
                 </div>
             </div>
-            <div class="card-footer">
+        {% else %}
+
+            <div class="col-md-9">
+
             </div>
-        </div>
+            <div class="col-md-3">
+                No document found.
+            </div>
+        {% endif %}
     </div>
-</div>
 {% endblock %}
