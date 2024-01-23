@@ -171,7 +171,7 @@ def links_delete_by_id(doc_id: str):
         # Record has successfully been deleted.
         # Redirect to list page
         audit_log(f"Document with id: {doc['_id']} and title:'{doc['title']}' has been deleted")
-        return redirect(url_for('list'))
+        return redirect(url_for('list_of_docs'))
 
     # There was an error with deleting.
     return render_template('details.html', errors=['Could not delete document from db'],
