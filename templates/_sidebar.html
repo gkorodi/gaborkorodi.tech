@@ -13,8 +13,12 @@
         </div>
         <ul class="nav">
 
-            {% set icons = { "dashboard":"chart-pie-36", "notifications":"bell-55", "profile":"single-02",
-            "list":"align-left-2"} %}
+            {% set icons = {
+            "dashboard":"chart-pie-36",
+            "notifications":"bell-55",
+            "profile":"single-02",
+            "list":"align-left-2"
+            } %}
 
             {% for menu in icons.keys() %}
                 <li class="{% if request.url_rule.endpoint == menu %}active{% endif %}">

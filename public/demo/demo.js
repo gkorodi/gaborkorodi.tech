@@ -760,7 +760,3 @@ demo = {
     }
 
 };
-
-function setLevel(doc_id, level) {
-                console.log("Setting level to "+level+" for document " + doc_id);
-        }
